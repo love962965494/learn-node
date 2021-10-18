@@ -1,6 +1,5 @@
 const fs = require('fs')
 const path = require('path')
-const os = require('os')
 
 /**
  * 同步写入
@@ -16,12 +15,20 @@ try {
  * 异步写入
  */
 try {
-  fs.appendFile(path.resolve(__dirname, './testWrite.txt'), '测试异步写入数据\n' + os.EOL, 'utf-8', function (err) {
-    if (err) {
-      console.log('异步写入文件出错：', err.message)
+  fs.writeFile(
+    path.resolve(__dirname, './testWrite.txt'),
+    '测试异步写入数据\n',
+    {
+      encoding: 'utf-8',
+      flag: 'a',
+    },
+    function (err) {
+      if (err) {
+        console.log('异步写入文件出错：', err.message)
+      }
+      console.log('异步写入文件成功')
     }
-    console.log('异步写入文件成功')
-  })
+  )
 } catch (error) {
   console.log('异步写入文件出错：', error.message)
 }
@@ -31,15 +38,15 @@ try {
  */
 try {
   const writeStream = fs.createWriteStream(path.resolve(__dirname, './testWrite.txt'), {
-    start: 2000,
-    encoding: 'utf-8'
+    flags: 'a',
+    encoding: 'utf-8',
   })
 
   writeStream.on('close', function () {
     console.log('文件流关闭')
   })
 
-  writeStream.write('文件流写入内容1')
+  writeStream.write('文件流写入内容1\n')
   writeStream.write('文件流写入内容2')
 
   writeStream.end('')
