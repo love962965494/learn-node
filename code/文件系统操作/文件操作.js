@@ -36,7 +36,7 @@ const createFile = async () =>
  */
 const readdir = async () =>
   fs
-    .readdir(path.resolve(__dirname, './hello'))
+    .readdir(path.resolve(__dirname, '../文件系统操作'))
     .then((data) => {
       for (const item of data) {
         console.log('遍历文件内容：', item)
@@ -97,6 +97,41 @@ const watch = async () => {
   }
 }
 
+/**
+ * 获取文件状态
+ */
+const stat = async () => fs.stat(path.resolve(__dirname, './hello/rename.txt')).then(data => {
+  console.log('文件状态：', data)
+}).catch(err => {
+  console.log('获取文件状态出错：', err.message)
+})
+
+/**
+ * 修改文件权限
+ * 7: 可读、可写和可执行
+ * 6: 可读、可写
+ * 5: 可读、可执行
+ * 4: 只读
+ * 3: 可写和可执行
+ * 2: 只写
+ * 1: 只可执行
+ * 0: 无权限
+ */
+const chmod = async () => fs.chmod(path.resolve(__dirname, './hello/rename.txt'), 7).then(() => {
+  console.log('修改文件权限成功')
+}).catch(err => {
+  console.log('修改文件权限失败：', err.message)
+})
+
+/**
+ * 复制文件夹
+ */
+const copyFile = async () => fs.copyFile(path.resolve(__dirname, './hello/index.txt'), path.resolve(__dirname, './hello/copy.txt')).then(() => {
+  console.log('复制文件夹成功')
+}).catch(err => {
+  console.log("复制文件夹失败：", err.message)
+})
+
 async function main() {
   // 创建文件夹
   await mkdir()
@@ -104,6 +139,10 @@ async function main() {
   // 创建文件
   await createFile()
 
+  // 复制文件
+  await copyFile()
+
+  // 监听文件操作
   watch()
 
   // 遍历文件夹
@@ -111,6 +150,12 @@ async function main() {
 
   // 重命名文件
   await renameFile()
+
+  // 获取文件状态
+  await stat()
+
+  // 修改文件权限
+  await chmod()
 
   // 删除文件
   await removeFile()
